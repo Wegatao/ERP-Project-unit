@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Pessoas</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  
+        <div class="sidebar">
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="#">Cadastro</a></li>
+                <li><a href="/Template/Atualizar_cad.html">Atualizar</a></li>
+              <li><a href="/Template/busca.html">buscar</a></li>
+               
+            </ul>
+        </div>
+       
+        <div class="main-content">
+            <main class="container">
+                <section class="form-section">
+                    <h2>Cadastrar pendencias</h2>
+                    <form id="form-cooperado">
+                        <label for="nome">Nome do Cooperado:</label>
+                        <input type="text" id="nome" name="nome" placeholder="Digite o nome" required>
+                    
+                        <label for="pendencias">Status:</label>
+                        <select id="pendencias" name="pendencias" required>
+                            <option value="ok">Ok</option>
+                            <option value="pendente">Pendente</option>
+                        </select>
+                    
+                        <label for="data_emissao">Data de Emissão:</label>
+                        <input type="date" id="data_emissao" name="data_emissao" required>
+                    
+                        <label for="observacao">Observação:</label>
+                        <textarea id="observacao" name="observacao" placeholder="Digite uma observação"></textarea>
+                    
+                        <button type="button" id="btn-cadastrar">Cadastrar</button>
+                    </form>
+             
+            </main>
+    
+            <footer class="footer">
+                <p>&copy; 2024 Cadastro de Pessoas. Todos os direitos reservados.</p>
+            </footer>
+        </div>
+    
+    </section>
+   
+
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

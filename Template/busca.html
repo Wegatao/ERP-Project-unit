@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Cooperados</title>
+    <link rel="stylesheet" href="/static/css/busca.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <ul>
+            <li><a href="/Template/index.html">Cadastro</a></li>
+            <li><a href="/Template/Atualizar_cad.html">Atualizar</a></li>
+            <li><a href="#">buscar</a></li>
+            
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <main class="container">
+            <h2>Buscar</h2>
+            <form id="form-buscar">
+                <label for="buscar-nome">Nome do cadastrado:</label>
+                <input type="text" id="buscar-nome" placeholder="Digite o nome do cooperado">
+                <button type="submit">Buscar</button>
+            </form>
+        
+            <table id="tabela-cooperados">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Observação</th>
+                        <th>Data</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dados dinâmicos -->
+                </tbody>
+            </table>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Cadastro de Pessoas. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/busca.js"></script>
+</body>
+</html>
