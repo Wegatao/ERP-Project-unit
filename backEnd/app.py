@@ -1,14 +1,33 @@
-from flask import Flask, request, jsonify, render_template
-import sqlite3
+from flask import Flask, request, jsonify
 from datetime import datetime
+from flask_cors import CORS
+import mysql.connector
+from mysql.connector import Error
+import os  # <-- IMPORTANTE!
+
+
 
 app = Flask(__name__)
+CORS(app)
 
-# Banco de dados
+# Banco de dados / Onde faço a conexão com o banco de dados.
+
 def conectar_banco():
-    conexao = sqlite3.connect("cadastros.db")
-    conexao.row_factory = sqlite3.Row
-    return conexao
+    try:
+        # Conexão com o banco de dados MySQL
+        conexao = mysql.connector.connect(
+            host= "DB_host",         # Host do MySQL (geralmente algo como "localhost" ou "ip_do_servidor")
+            database="DB_banco",      # Nome do banco de dados
+            user="DB_user",            # Seu usuário MySQL
+            password="DB_password"           # Sua senha MySQL
+        )
+        if conexao.is_connected():
+            print("Conexão bem-sucedida com o banco de dados.")
+        return conexao
+    except Error as e:
+        print(f"Erro ao conectar no MySQL: {e}")
+        return None
+ 
 
 # Criar tabela caso não exista
 def criar_tabela():
@@ -16,28 +35,28 @@ def criar_tabela():
     cursor = conexao.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS cooperados (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            pendencias TEXT,
-            data_emissao TEXT,
-            observacao TEXT
+         id INT AUTO_INCREMENT PRIMARY KEY,
+         nome VARCHAR(255) NOT NULL,
+         pendencias TEXT,
+         data_emissao VARCHAR(50),
+         observacao TEXT
         )
     """)
     conexao.commit()
     conexao.close()
 
 # Rota principal
-@app.route("/")
-def index():
-    return render_template("index.html")
+#@app.route("/")
+#def index():
+#    return render_template("index.html")
 
-@app.route("/Atualizar_cad")
-def paginaC():
-    return render_template("Atualizar_cad.html")
+#@app.route("/Atualizar_cad")
+#def paginaC():
+#    return render_template("Atualizar_cad.html")
 
-@app.route("/busca")
-def busca():
-    return render_template("busca.html")
+#@app.route("/busca")
+#def busca():
+#    return render_template("busca.html")
 
 # Rota para cadastrar pessoa
 @app.route("/cadastrar", methods=["POST"])
@@ -60,9 +79,10 @@ def cadastrar():
     conexao = conectar_banco()
     cursor = conexao.cursor()
     cursor.execute(
-        "INSERT INTO cooperados (nome, pendencias, data_emissao, observacao) VALUES (?, ?, ?, ?)",
-        (nome, pendencias, data_emissao, observacao)
-    )
+    "INSERT INTO cooperados (nome, pendencias, data_emissao, observacao) VALUES (%s, %s, %s, %s)",
+    (nome, pendencias, data_emissao, observacao)
+     )
+    
     conexao.commit()
     conexao.close()
 
@@ -74,8 +94,8 @@ def buscar():
     nome = dados.get("nome", "")
 
     conexao = conectar_banco()
-    cursor = conexao.cursor()
-    cursor.execute("SELECT * FROM cooperados WHERE nome LIKE ?", (f"%{nome}%",))
+    cursor = conexao.cursor( dictionary=True )
+    cursor.execute("SELECT * FROM cooperados WHERE nome LIKE %s", (f"%{nome}%",))
     resultado = cursor.fetchall()
     conexao.close()
 
@@ -105,9 +125,10 @@ def atualizar():
     conexao = conectar_banco()
     cursor = conexao.cursor()
     cursor.execute(
-        "UPDATE cooperados SET pendencias = ?, observacao = ? WHERE id = ?",
+        "UPDATE cooperados SET pendencias = %s, observacao = %s WHERE id = %s",
         (novo_status, nova_observacao, id_cooperado)
     )
+    
     conexao.commit()
     conexao.close()
 
@@ -117,4 +138,5 @@ def atualizar():
 criar_tabela()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Pega porta definida pelo Render
+    app.run(host="0.0.0.0", port=port)
